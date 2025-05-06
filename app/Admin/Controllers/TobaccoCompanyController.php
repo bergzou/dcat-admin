@@ -35,7 +35,7 @@ class TobaccoCompanyController extends AdminController
                 $filter->like('company_name');
                 $filter->equal('company_area');
                 $filter->equal('company_person');
-                $filter->equal('company_phone');
+                $filter->like('company_phone');
                 $filter->equal('company_level');
 
             });
