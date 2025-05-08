@@ -33,43 +33,47 @@ class TianYanCha1 extends Command
     {
 
         ini_set ("memory_limit","-1");
-        
-        $tobaccoCompany = DB::table('tobacco_company_new')->where('company_crack',1)->limit(10000)->get()->toArray();
+
+        $tobaccoCompany = DB::table('tobacco_company_tianyancha')->where('company_crack',1)->limit(10000)->orderBy('id','desc')->get()->toArray();
 
         if (!empty($tobaccoCompany)){
 
             foreach ($tobaccoCompany as $value){
 
-                $mtRandNumber = mt_rand(1, 10);
+                $mtRandNumber = mt_rand(1, 5);
 
-                $stopTime = 5 + $mtRandNumber;
+                $stopTime = 2 + $mtRandNumber;
                 sleep($stopTime);
-                
+
                 var_dump(date("Y-m-d H:i:s").":".$value->company_name);
 
                 $res = $this->search($value->company_name);
-              
-               
+
+
                 if (!empty($res)){
                     foreach ($res as $key => $companyData ){
-                    
+
                         $companyPhone = $companyData['phoneNum'] ?? "wu";
                         $companyPhoneArr = $companyData['phoneList'] ?? [];
-    
+
                         $companyName = $companyData['name'] ?? '';
                         $companyName = strip_tags($companyName);
-                        $inssertData[] = [
-                            'company_name' => $companyName,
-                            'company_area' => $companyData['districtName'] ?? '',
-                            'company_person' => $companyData['legalPersonName']?? '',
-                            'company_phone' => $companyPhone,
-                            'company_phone_json' => json_encode($companyPhoneArr),
-                            'company_level' => $key,
-                            'created_at' => date("Y-m-d H:i:s"),
-                            'updated_at' => date("Y-m-d H:i:s"),
-                        ];
+                        $company = DB::table('tobacco_company')->where('company_name',$companyName)->first();
+                        if (empty($company)){
+                            $insertData = [
+                                'company_name' => $companyName,
+                                'company_area' => $companyData['districtName'] ?? '',
+                                'company_person' => $companyData['legalPersonName']?? '',
+                                'company_phone' => $companyPhone,
+                                'company_phone_json' => json_encode($companyPhoneArr),
+                                'company_level' => $key,
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'updated_at' => date("Y-m-d H:i:s"),
+                            ];
+                            DB::table('tobacco_company')->insert($insertData);
+                        }
                     }
-                    DB::table('tobacco_company')->insert($inssertData);
+
 
                 }
                 DB::table('tobacco_company_new')->where('id',$value->id)->update(['company_crack' => 2]);
@@ -177,7 +181,7 @@ class TianYanCha1 extends Command
         if (!$nextData){
             var_dump('无法就取到数据');
             die;
-        } 
+        }
 
 
         $data = json_decode($nextData,true);

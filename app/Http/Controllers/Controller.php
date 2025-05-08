@@ -2,12 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
 
-class Controller extends BaseController
+
+use App\Console\Commands\TianYanCha;
+use App\Console\Commands\TianYanCha3;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Libraries\Response;
+use Illuminate\Support\Facades\DB;
+
+
+class Controller
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+
+
+    public function index(Request $request){
+
+        $res = (new TianYanCha())->search('深圳市龙岗区实惠佳便利店');
+        return $res;
+    }
+
+
+
 }
