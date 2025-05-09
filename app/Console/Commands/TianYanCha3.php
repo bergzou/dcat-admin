@@ -34,7 +34,7 @@ class TianYanCha3 extends Command
 
         ini_set ("memory_limit","-1");
 
-        $tobaccoCompany = DB::table('tobacco_company_tianyancha')->where('company_crack',1)->orderBy('id','desc')->limit(10000)->get()->toArray();
+        $tobaccoCompany = DB::table('tobacco_company_tianyancha')->where('company_crack',1)->orderBy('id','desc')->get()->toArray();
 
         if (!empty($tobaccoCompany)){
 
